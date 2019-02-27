@@ -9,9 +9,9 @@
 plugins {
     // Apply the java plugin to add support for Java
     java
-
     // Apply the application plugin to add support for building an application
     application
+    idea
 }
 
 repositories {
@@ -23,10 +23,12 @@ repositories {
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     implementation("com.google.guava:guava:27.0.1-jre")
-
+    compile("io.netty:netty-all:4.1.33.Final")
+    compile("ch.qos.logback:logback-classic:1.0.13")
     // Use JUnit test framework
     testImplementation("junit:junit:4.12")
 }
+
 
 application {
     // Define the main class for the application
