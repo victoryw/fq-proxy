@@ -12,12 +12,14 @@ plugins {
     // Apply the application plugin to add support for building an application
     application
     idea
+    id("io.freefair.lombok") version "3.1.4"
 }
 
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -25,6 +27,7 @@ dependencies {
     implementation("com.google.guava:guava:27.0.1-jre")
     compile("io.netty:netty-all:4.1.33.Final")
     compile("ch.qos.logback:logback-classic:1.0.13")
+
     // Use JUnit test framework
     testImplementation("junit:junit:4.12")
 }
