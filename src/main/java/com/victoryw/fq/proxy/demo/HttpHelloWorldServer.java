@@ -38,7 +38,7 @@ import java.security.cert.CertificateException;
 public final class HttpHelloWorldServer {
 
     static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
+    static final int PORT =HttpServerHandler.serverPort;
 
     public  void run() throws CertificateException, SSLException, InterruptedException {
         // Configure SSL.
@@ -53,6 +53,7 @@ public final class HttpHelloWorldServer {
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new HttpServerInitializer());
+
 
             Channel ch = b.bind(PORT).sync().channel();
 
