@@ -13,20 +13,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.victoryw.fq.proxy.demo;
+package com.victoryw.fq.proxy.server;
 
-import com.victoryw.fq.proxy.demo.HttpServerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 import javax.net.ssl.SSLException;
 import java.security.cert.CertificateException;
@@ -35,14 +32,10 @@ import java.security.cert.CertificateException;
  * An HTTP server that sends back the content of the received HTTP request
  * in a pretty plaintext form.
  */
-public final class HttpHelloWorldServer {
-
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT =HttpServerHandler.serverPort;
+public final class HttpProxyServer {
+    private static final int PORT = HttpProxyInboundHandler.serverPort;
 
     public  void run() throws CertificateException, SSLException, InterruptedException {
-        // Configure SSL.
-        // Configure the server.
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -52,14 +45,12 @@ public final class HttpHelloWorldServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new HttpServerInitializer());
+                    .childHandler(new HttpProxyServerInitializer());
 
 
-            Channel ch = b.bind(PORT).sync().channel();
-
-            System.err.println("Open your web browser and navigate to " +
-                    (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
-
+            final ChannelFuture bind = b.bind(PORT);
+            final ChannelFuture sync = bind.sync();
+            Channel ch = sync.channel();
             ch.closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

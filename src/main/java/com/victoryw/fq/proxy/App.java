@@ -3,7 +3,7 @@
  */
 package com.victoryw.fq.proxy;
 
-import com.victoryw.fq.proxy.demo.HttpHelloWorldServer;
+import com.victoryw.fq.proxy.server.HttpProxyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            new HttpHelloWorldServer().run();
+            new HttpProxyServer().run();
         } catch (InterruptedException | CertificateException | SSLException e) {
             logger.error("......",e);
         }
